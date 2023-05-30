@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+'''
+Jex Client
+
+Writing this in Python for two reasons:
+
+1. Waiting for an Erlang node to spin up is annoying as fuck
+2. Client/server model inherently makes sense
+3. Python is nicer for writing CLI things
+'''
+
+
+import socket as s
+
+def main():
+    with s.socket(s.AF_INET, s.SOCK_STREAM) as ss:
+        ss.connect(('localhost', 7070))
+        ss.sendall(b'hi')
+
+if __name__ == '__main__':
+    main()
