@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 '''
-Jex Client
+jc: Jex Client
 
 Writing this in Python for two reasons:
 
@@ -10,6 +10,7 @@ Writing this in Python for two reasons:
 3. Python is nicer for writing CLI things
 '''
 
+import argparse as ap
 
 import socket as s
 
