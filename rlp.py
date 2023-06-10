@@ -67,9 +67,7 @@ def encode_bytes(bs: bytes) -> bytes:
     # if the bytestring is 0..55 items long, the first byte is 128 + length,
     # the rest of the string is the string
     elif bytelen <= 55:
-        first_byte       = 128 + bytelen
-        first_byte_bytes = encode_unsigned(first_byte)
-        # python is so stupid
+        first_byte       = 128 + bytelen first_byte_bytes = encode_unsigned(first_byte) # python is so stupid
         result           = bytes([]).join([first_byte_bytes, bs])
         return result
     # if the bytestring is more than 55 items long, the first byte is 183 +
@@ -84,6 +82,26 @@ def encode_bytes(bs: bytes) -> bytes:
                                                          bytelen_BYTES,
                                                          bs])
         return result
+
+
+
+def encode_list(ls: List[RLPData]) -> bytes:
+    '''
+    Encode a list of RLP items
+    '''
+    payload      = (b'').join([encode(item) for item in ls])
+    payload_size = len(payload)
+    if payload_size <= 55:
+        first_byte_INT   = 192 + payload_size
+        first_byte_BYTES = bytes([first_byte_INT])
+        return (b'').join([first_byte_BYTES, payload])
+    else:
+        payload_size_BYTES            = encode_unsigned(payload_size)
+        payload_size_BYTES_size_INT   = len(payload_size_BYTES)
+        payload_size_BYTES_size_BYTES = encode_unsigned(247 + payload_size_BYTES_size_INT)
+        return (b'').join([payload_size_BYTES_size_BYTES,
+                           payload_size_BYTES,
+                           payload])
 
 
 
