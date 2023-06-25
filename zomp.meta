@@ -6,11 +6,11 @@
 {desc,"jex"}.
 {file_exts,[]}.
 {key_name,none}.
-{license,"MIT"}.
+{license,"ISC"}.
 {mod,"jex"}.
 {modules,[]}.
 {name,"jex"}.
-{package_id,{"otpr","jex",{0,1,0}}}.
+{package_id,{"otpr","jex",{0,2,0}}}.
 {prefix,none}.
 {repo_url,[]}.
 {tags,[]}.
