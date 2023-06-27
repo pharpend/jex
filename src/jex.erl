@@ -11,21 +11,21 @@
 
 
 
-%-record(jex,
-%        {vsn :: semver(),
-%         vd  :: jex_versioned_data()}).
-%
-%-record(jex_vd_0_2_0,
-%        {}).
-%
-%%-type jex()                :: #jex{}.
-%%-type jexs()               :: [jex()].
-%-type jex_vd_0_2_0()       :: #jex_vd_0_2_0{}.
-%-type jex_versioned_data() :: jex_vd_0_2_0().
-%-type semver()             :: {Major :: integer(),
-%                               Minor :: integer(),
-%                               Patch :: integer()}.
-%
+-record(jex,
+        {vsn :: semver(),
+         vd  :: jex_versioned_data()}).
+
+-record(jex_vd_0_2_0,
+        {}).
+
+-type jex()                :: #jex{}.
+-type jexs()               :: [jex()].
+-type jex_vd_0_2_0()       :: #jex_vd_0_2_0{}.
+-type jex_versioned_data() :: jex_vd_0_2_0().
+-type semver()             :: {Major :: integer(),
+                               Minor :: integer(),
+                               Patch :: integer()}.
+
 
 
 -spec start(ArgV) -> ok
@@ -45,6 +45,11 @@ start(ArgV) ->
 %% this is for decoding the state and barfing to stdout
 dispatch(["barf"]) ->
     barf();
+%% this is for decoding the state and barfing to stdout
+dispatch(["--version"]) ->
+    '--version'();
+dispatch(["--semver"]) ->
+    '--semver'();
 dispatch(_) ->
     io:format("maid yourself~n", []).
 
@@ -75,6 +80,25 @@ barf2(Binary) ->
 
 
 
+-spec '--version'() -> ok.
+%% @private
+%% print the string version to the console
+
+'--version'() ->
+    tell(info, "~ts", [jex_vsn_str()]).
+
+
+
+
+-spec '--semver'() -> ok.
+%% @private
+%% print the tuple version to the console
+
+'--semver'() ->
+    tell(info, "~tp", [jex_vsn_semver()]).
+
+
+
 -spec jexs_filepath() -> JexsDotEtermsFilePath
     when JexsDotEtermsFilePath :: string().
 %% @private
@@ -82,3 +106,27 @@ barf2(Binary) ->
 
 jexs_filepath() ->
     filename:join([os:getenv("HOME"), ".jex", "jexs.eterms"]).
+
+
+
+-spec jex_vsn_str() -> string().
+%% @private
+%% get the string version of the running version of jex
+
+jex_vsn_str() ->
+    proplists:get_value(vsn, ?MODULE:module_info(attributes)).
+
+
+
+-spec jex_vsn_semver() -> semver().
+%% @private
+
+jex_vsn_semver() ->
+    jvs(jex_vsn_str()).
+
+jvs(VersionString) ->
+    [Major, Minor, Patch] = lists:map(fun erlang:list_to_integer/1,
+                                      string:lexemes(VersionString, ".")),
+    {Major, Minor, Patch}.
+
+
