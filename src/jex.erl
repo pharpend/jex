@@ -48,10 +48,22 @@ dispatch(["barf"]) ->
 %% this is for decoding the state and barfing to stdout
 dispatch(["--version"]) ->
     '--version'();
-dispatch(["--semver"]) ->
-    '--semver'();
+dispatch(["--version_tuple"]) ->
+    '--version_tuple'();
 dispatch(_) ->
-    io:format("maid yourself~n", []).
+    help();
+
+
+help() ->
+    HelpMenu =
+        ["Jex: the simple JS/TS package manager\n"
+         "version ", jex_vsn_str(), "\n"
+         "COMMANDS\n"
+         "  --version           print the version as a X.Y.Z string\n"
+         "  --version_tuple     print the version as a {X,Y,Z} tuple\n"
+         "  barf                parse ~/.jex/jexs.eterms and print the term\n"
+        ],
+    io:format(HelpMenu, []).
 
 
 
@@ -90,11 +102,11 @@ barf2(Binary) ->
 
 
 
--spec '--semver'() -> ok.
+-spec '--version_tuple'() -> ok.
 %% @private
 %% print the tuple version to the console
 
-'--semver'() ->
+'--version_tuple'() ->
     tell(info, "~tp", [jex_vsn_semver()]).
 
 
